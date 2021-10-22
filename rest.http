@@ -1,0 +1,21 @@
+####USER CMS APIS
+
+
+### root API
+GET http://localhost:8000/
+
+### Create new user
+POST http://localhost:8000/api/v1/user
+Content-Type: application/json
+
+{
+    "fname":"Niraj",
+    "lname": "Bohora",
+    "email":"nirj@gmail.com",
+    "phone":"041000000",
+    "password":"12345667",
+    "address":"sydney, NSW",
+    "gender":"male"
+    
+
+}
