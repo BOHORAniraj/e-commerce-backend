@@ -22,6 +22,11 @@ const UserSchema = mongoose.Schema({
         index:1
         
     },
+    isEmailConfirmed: {
+        type: Boolean,
+        required: true,
+      default:"false",
+    },
     phone: {
         type: String,
         require: true,

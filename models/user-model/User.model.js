@@ -8,3 +8,12 @@ export const createUser = newUser => {
         
     }
 };
+export const verifyEmail = email => {
+    try {
+        const result = UserSchema.findOne({ email });
+        return result;
+
+    } catch (error) {
+        throw new Error(error);
+    }
+}

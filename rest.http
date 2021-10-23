@@ -11,11 +11,21 @@ Content-Type: application/json
 {
     "fname":"Niraj",
     "lname": "Bohora",
-    "email":"nirj@gmail.com",
+    "email":"jsa@gmil.com",
     "phone":"041000000",
     "password":"12345667",
     "address":"sydney, NSW",
     "gender":"male"
     
 
+}
+
+### verify user email
+
+PATCH http://localhost:3000/email-verifiation?
+Content-Type: application/json
+
+{
+"pin":"835412",
+"email": "jsa@gmil.com"
 }
