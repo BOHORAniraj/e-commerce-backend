@@ -63,9 +63,11 @@ Router.patch(
 	async (req, res) => {
 		try {
 			const result = await findUserEmailVerification(req.body);
+			console.log(result,"userrouter")
 
-			if (result?._id) {
+			if(result?._id) {
 				const data = await verifyEmail(result.email);
+				console.log(data,"fromdatta")
 				if (data?._id) {
 					deleteInfo(req.body);
 					sendEmailVerificationConfirmation({

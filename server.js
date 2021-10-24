@@ -28,7 +28,7 @@ app.use("/",(req, res) => {
 
 
 })
-app.listen(PORT, (error) => {
+app.listen(PORT, error => {
     if (error) {
         return console.log(error);
 

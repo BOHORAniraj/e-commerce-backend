@@ -11,7 +11,7 @@ Content-Type: application/json
 {
     "fname":"Niraj",
     "lname": "Bohora",
-    "email":"jasss@gmil.com",
+    "email":"aaa@gmil.com",
     "phone":"041000000",
     "password":"12345667",
     "address":"sydney, NSW",
@@ -25,6 +25,6 @@ PATCH http://localhost:8000/api/v1/user/email-verification
 Content-Type: application/json
 
 {
-"pin":"451442",
-"email":"jasss@gmil.com"
+"pin":"362107",
+"email":"aaa@gmil.com"
 }
