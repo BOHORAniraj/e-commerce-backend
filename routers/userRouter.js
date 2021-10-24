@@ -2,91 +2,93 @@ import express from 'express'
 const Router = express.Router();
 
 import { createUser, verifyEmail } from '../models/user-model/User.model.js'
-import { createUserValidation , UserEmailValidation} from '../middlewares/formValidation.middleware.js'
+import { createUserValidation , UserEmailVerificationValidation} from '../middlewares/formValidation.middleware.js'
 import { hashPassword } from '../helpers/bcrypt.helper.js'
 import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/session/Session.model.js'
-import {emailProcessor} from '../helpers/email.helper.js'
+import {sendEmailVerificationConfirmation,sendEmailVerificationLink} from '../helpers/email.helper.js'
 
 Router.all("/", (req, res, next) => {
-    console.log("from user router");
-    next();
+	next();
+});
 
-})
+Router.post("/", createUserValidation, async (req, res) => {
+	try {
+		const hashPass = hashPassword(req.body.password);
 
-Router.post("/",createUserValidation, async (req, res) => {
-    
-    try {
-        const hashPass = hashPassword(req.body.password);
-        if (hashPass) {
-            
-    
-            req.body.password = hashPass
+		if (hashPass) {
+			req.body.password = hashPass;
 
-            console.log(hashPass);
+			const { _id, fname, email } = await createUser(req.body);
 
-            const {_id,fname,email} = await createUser(req.body)
-            if (_id) {
+			if (_id) {
+				const { pin } = await createUniqueEmailConfirmation(email);
 
-                const {pin} = await createUniqueEmailConfirmation(email);
+				if (pin) {
+					const forSendingEmail = {
+						fname,
+						email,
+						pin,
+					};
+					sendEmailVerificationLink(forSendingEmail);
+				}
 
-               
+				return res.json({
+					state: "success",
+					message:
+						"New user has been created successfully! WE have send a email confirmation to your email, please check and follow the instruction to activate your account",
+				});
+			}
+		}
+		res.json({
+			state: "error",
+			message: "Unable to created new user",
+		});
+	} catch (error) {
+		let msg = "Error, Unable to created new user";
+		console.log(error.message);
+		if (error.message.includes("E11000 duplicate key error collection")) {
+			msg = "This email has been used by another user.";
+		}
+		res.json({
+			state: "error",
+			message: msg,
+		});
+	}
+});
 
-                if (pin) {
-                    const forSendingEmail = {
-                        fname,
-                        email,
-                        pin,
-                    }
-                    emailProcessor(forSendingEmail);
-                }
+//email verification
+Router.patch(
+	"/email-verification",
+	UserEmailVerificationValidation,
+	async (req, res) => {
+		try {
+			const result = await findUserEmailVerification(req.body);
 
-
-                return res.json({
-                    state: 'success',
-                    message: "New User has been created successfully",
-                })
-            }
-        }
-        res.json({
-            state: "error",
-            message: " unable to create new user",
-        })
-    } catch (error) {
-        console.log(error.message);
-        res.json({
-            state: "error",
-            message:"Error,unable to create new user",
-
-        })
-        
-    }
-})
-
-
-Router.patch("/email-verification", UserEmailValidation, async (req, res) => {
-    try {
-        const result = await findUserEmailVerification(req.body);
-
-        if (result?._id) {
-            const data = await verifyEmail(result.email)
-            if (data?._id) {
-                deleteInfo(req.body);
-                sendEma
-                
-            }
-        }
-        res.json({
-            status: "error",
-            message: "Unable to verify email , eitther your link is invalid or expired"
-        })
-    } catch (error) {
-        res.json({
-            status: "error",
-            message:"error, unable to verify email, please try again later",
-        })
-        
-    }
-})
-
-
+			if (result?._id) {
+				const data = await verifyEmail(result.email);
+				if (data?._id) {
+					deleteInfo(req.body);
+					sendEmailVerificationConfirmation({
+						fname: data.fname,
+						email: data.email,
+					});
+					return res.json({
+						status: "success",
+						message: "Your email has been verified, you may login now",
+					});
+				}
+			}
+			res.json({
+				status: "error",
+				message:
+					"Unable to verify your email, either the link is invalid or expired",
+			});
+		} catch (error) {
+			res.json({
+				status: "error",
+				message: "Error, Unable to verify the email, please try again later",
+			});
+		}
+	}
+);
 export default Router;

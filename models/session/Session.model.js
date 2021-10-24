@@ -15,17 +15,19 @@ export const createUniqueEmailConfirmation =async email => {
             email
         }
         const result = await SessionSchema(newEmailValidation).save();
-        console.log(result,"from session model");
+        
         return result;
     } catch (error) {
       throw new Error(error)  
     }
 }
 
-export const findUserEmailVerification = async (filterObj) => {
+export const findUserEmailVerification = async filterObj => {
     try {
-        const result = await SessionSchema().findOne(filterObj);
+        const result = await SessionSchema.findOne(filterObj);
+        console.log(result,"from verification")
         return result;
+        
 
     } catch (error) {
         throw new Error(error);

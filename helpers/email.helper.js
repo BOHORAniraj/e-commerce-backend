@@ -26,11 +26,25 @@ const send = async infoObj => {
     }
     
 }
-export const emailProcessor = ({ fname, email, pin }) => {
-    const link = `http://localhost:3000/email-verifiation?pin=${pin}&email=${email}`
+export const emailProcessor = ({ email,subject,text,html}) => {
+    
     let info = {
         from: `"ESHOP Nepal 👻" <${process.env.EMAIL_USER}>`, // sender address
         to: email, // list of receivers
+        subject,
+        text,
+        html,
+        
+    }
+    send(info);
+    }
+
+export const sendEmailVerificationLink = emailObj => {
+    const { fname, pin, email } = emailObj;
+
+    const link = `http://localhost:3000/email-verifiation?pin=${pin}&email=${email}`
+    const obj = {
+        ...emailObj,
         subject: "Email confirmation Required", // Subject line
         text: `Hi ${fname} ,please follow the link below to confirm your email.${link}`, // plain text body
         html: `Hello ${fname},
@@ -39,6 +53,22 @@ export const emailProcessor = ({ fname, email, pin }) => {
         Thank you <br/>
         Kind Regards,`, // html body
     }
-    send(info);
+    emailProcessor(obj);
     }
 
+    export const sendEmailVerificationConfirmation = emailObj => {
+        const { fname } = emailObj;
+    
+        const link = `http://localhost:3000/email-verifiation?pin=${pin}&email=${email}`
+        const obj = {
+            ...emailObj,
+            subject: "Email verification Success", // Subject line
+            text: `Hi ${fname} ,Your email has been verified.`, // plain text body
+            html: `Hello ${fname},
+            <br/>
+            Your email has been verified <br/>
+            Thank you <br/>
+            Kind Regards,`, // html body
+        }
+        emailProcessor(obj);
+        }

@@ -3,13 +3,13 @@ const SessionSchema = mongoose.Schema(
     {
         pin: {
             type: String,
-            require: true,
+            required: true,
         },
 
     
     email: {
         type: String,
-        require: true,
+        required: true,
         max: 50,
               
         },
@@ -17,7 +17,7 @@ const SessionSchema = mongoose.Schema(
             type: String,
             default: "emailValidation",
             max:50,
-    }
+    },
     
 },
     {

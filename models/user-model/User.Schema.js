@@ -2,12 +2,12 @@ import mongoose from 'mongoose'
 const UserSchema = mongoose.Schema({
     fname: {
         type: String,
-        require: true,
+        required: true,
         default:""
     },
     lname: {
         type: String,
-        require: true,
+        required: true,
         default:""
     },
     dob: {
@@ -15,7 +15,7 @@ const UserSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        require: true,
+        required: true,
         default: "",
         max: 50,
         unique: true,
@@ -29,13 +29,13 @@ const UserSchema = mongoose.Schema({
     },
     phone: {
         type: String,
-        require: true,
+        required: true,
         default: "",
         max:20
     },
     password: {
         type: String,
-        require: true,
+        required: true,
         default: "",
         max: 20,
         min:8
@@ -50,7 +50,7 @@ const UserSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        require: true,
+        required: true,
         default:"user"
 
     },
@@ -59,5 +59,5 @@ const UserSchema = mongoose.Schema({
         timestamps: true,
     }
 )
-const User = mongoose.model("user", UserSchema);
-export default User;
+const user = mongoose.model("User", UserSchema);
+export default user;
