@@ -14,7 +14,7 @@ export const createUserValidation = (req, res, next) => {
 		phone: Joi.string().max(15),
 		address: Joi.string().max(100),
 		dob: Joi.date(),
-		gander: Joi.string().max(6),
+		gender: Joi.string().max(6),
 	});
 
 	const value = schema.validate(req.body);
