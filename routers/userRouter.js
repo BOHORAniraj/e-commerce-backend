@@ -1,9 +1,9 @@
 import express from 'express'
 const Router = express.Router();
 
-import { createUser, verifyEmail } from '../models/user-model/User.model.js'
-import { createUserValidation , UserEmailVerificationValidation} from '../middlewares/formValidation.middleware.js'
-import { hashPassword } from '../helpers/bcrypt.helper.js'
+import { createUser, getUserByEmail, verifyEmail } from '../models/user-model/User.model.js'
+import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation} from '../middlewares/formValidation.middleware.js'
+import { comparePassword, hashPassword } from '../helpers/bcrypt.helper.js'
 import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/session/Session.model.js'
 import {sendEmailVerificationConfirmation,sendEmailVerificationLink} from '../helpers/email.helper.js'
 
@@ -93,4 +93,47 @@ Router.patch(
 		}
 	}
 );
+
+
+
+//user login
+
+Router.post("/login",loginUserFormValidation, async (req, res) => {
+	try {
+		const { email, password } = req.body
+		const user = await getUserByEmail(email);
+		
+
+		if (user?._id) {
+		
+			const isPassMatch = comparePassword(password, user.password)
+
+			if (isPassMatch) {
+				return	res.status(401).json({
+					status: "success",
+					messgae: "login success",
+				})
+			}
+
+
+
+
+		
+		}
+
+		res.status(401).json({
+			status: "error",
+			messgae: "unauthorized",
+		})
+	} catch (error) {
+		console.log(error)
+		res.status(500).json({
+			status: "error",
+			message:"Error, unbale to login now , please try again later"
+			
+		})
+		
+	}
+})
+
 export default Router;

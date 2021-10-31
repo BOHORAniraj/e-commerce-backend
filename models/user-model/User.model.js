@@ -23,3 +23,6 @@ export const verifyEmail = email => {
 		throw new Error(error);
 	}
 };
+export const getUserByEmail = email => {
+	return UserSchema.findOne({ email });
+}
