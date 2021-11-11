@@ -2,18 +2,17 @@ import mongoose from "mongoose";
 
 const SessionSchema = mongoose.Schema(
 	{
-		pin: {
-			type: String,
-			required: true,
-		},
+		
 		email: {
 			type: String,
 			required: true,
+			default:"accessJWT",
 			max: 50,
 		},
-		type: {
+		token: {
 			type: String,
-			default: "emailValidation",
+			required:true,
+			default: null,
 			max: 50,
 		},
 	},

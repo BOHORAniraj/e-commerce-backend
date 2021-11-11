@@ -11,7 +11,7 @@ Content-Type: application/json
 {
     "fname":"Niraj",
     "lname": "Bohora",
-    "email":"13@gmil.com",
+    "email":"1q3@gmil.com",
     "phone":"041000000",
     "password":"12345667",
     "address":"sydney, NSW",
@@ -35,6 +35,6 @@ POST http://localhost:8000/api/v1/user/login
 Content-Type: application/json
 
 {
-    "email":"122@gmail.com",
+    "email":"qaq@gmail.com",
     "password":"12345678"
 }

@@ -23,6 +23,11 @@ export const verifyEmail = email => {
 		throw new Error(error);
 	}
 };
+export const setRefreshJWT = (_id, token) => {
+	return UserSchema.findByIdAndUpdate(_id, {
+		refreshJWT: token,
+	});
+};
 export const getUserByEmail = email => {
 	return UserSchema.findOne({ email });
 }

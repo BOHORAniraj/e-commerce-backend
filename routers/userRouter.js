@@ -4,8 +4,9 @@ const Router = express.Router();
 import { createUser, getUserByEmail, verifyEmail } from '../models/user-model/User.model.js'
 import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation} from '../middlewares/formValidation.middleware.js'
 import { comparePassword, hashPassword } from '../helpers/bcrypt.helper.js'
-import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/session/Session.model.js'
-import {sendEmailVerificationConfirmation,sendEmailVerificationLink} from '../helpers/email.helper.js'
+import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/rest-pin/Pin.model.js'
+import { sendEmailVerificationConfirmation, sendEmailVerificationLink } from '../helpers/email.helper.js'
+import {getJWTs} from "../helpers/jwt.helper.js"
 
 Router.all("/", (req, res, next) => {
 	next();
@@ -109,9 +110,15 @@ Router.post("/login",loginUserFormValidation, async (req, res) => {
 			const isPassMatch = comparePassword(password, user.password)
 
 			if (isPassMatch) {
-				return	res.status(401).json({
+
+				// get jwts then send to the client
+				const jwts = await getJWTs({ _id: user._id, email: user.email });
+				user.password = undefined;
+				return	res.json({
 					status: "success",
 					messgae: "login success",
+					jwts,
+					user,
 				})
 			}
 
@@ -135,5 +142,9 @@ Router.post("/login",loginUserFormValidation, async (req, res) => {
 		
 	}
 })
+
+
+
+
 
 export default Router;
