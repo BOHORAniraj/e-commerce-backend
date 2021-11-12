@@ -38,3 +38,7 @@ Content-Type: application/json
     "email":"qaq@gmail.com",
     "password":"12345678"
 }
+ 
+### get new acccess token router
+GET http://localhost:8000/api/v1/token/
+authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFhcUBnbWFpbC5jb20iLCJpYXQiOjE2MzY2ODQ2NjksImV4cCI6MTYzOTI3NjY2OX0.PnBPGGIOk567O6AWFyR-3hzyebKmwu5JIVanodgiGEI

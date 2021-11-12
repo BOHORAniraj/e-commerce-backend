@@ -22,9 +22,11 @@ app.use(express.json());
 
 //load Routers
 import userRouter from './routers/userRouter.js'
+import tokenRouter from './routers/tokenRouter.js'
 
 //use Routers
 app.use("/api/v1/user", userRouter)
+app.use("/api/v1/token",tokenRouter)
 
 app.use("/",(req, res) => {
     res.json({ message: "hello world" });
