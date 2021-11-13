@@ -1,12 +1,13 @@
 import express from 'express'
 const Router = express.Router();
 
-import { createUser, getUserByEmail, verifyEmail } from '../models/user-model/User.model.js'
+import { createUser, getUserByEmail, verifyEmail,removeRefreshJWT } from '../models/user-model/User.model.js'
 import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation} from '../middlewares/formValidation.middleware.js'
 import { comparePassword, hashPassword } from '../helpers/bcrypt.helper.js'
 import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/rest-pin/Pin.model.js'
 import { sendEmailVerificationConfirmation, sendEmailVerificationLink } from '../helpers/email.helper.js'
-import {getJWTs} from "../helpers/jwt.helper.js"
+import { getJWTs } from "../helpers/jwt.helper.js"
+import {removeSession} from "../models/session/Session.model.js"
 
 Router.all("/", (req, res, next) => {
 	next();
@@ -138,7 +139,24 @@ Router.post("/login",loginUserFormValidation, async (req, res) => {
 		
 	}
 })
+Router.post("/logout", async (req, res) => {
+	try {
+		const { accessJWT, refreshJWT } = req.body;
+		accessJWT && (await removeSession(accessJWT));
+		refreshJWT && (await removeRefreshJWT(refreshJWT));
 
+		res.json({
+			status: "success",
+			message: "logging out ..",
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			status: "error",
+			message: "Error, unable to login now, please try again later",
+		});
+	}
+});
 
 
 
