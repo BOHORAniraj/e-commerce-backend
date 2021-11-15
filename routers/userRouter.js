@@ -16,9 +16,12 @@ Router.all("/", (req, res, next) => {
 
 Router.get("/",UserAuth, async (req, res) => {
 	
-	console.log(req.body)
-	// console.log(user)
-	res.json("niraj")
+	
+	res.json({
+		status: "success",
+		message: "user profile",
+		user:req.user,
+	})
 	
 })
 
