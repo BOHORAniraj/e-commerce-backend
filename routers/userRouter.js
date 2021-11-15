@@ -1,17 +1,26 @@
 import express from 'express'
 const Router = express.Router();
 
-import { createUser, getUserByEmail, verifyEmail,removeRefreshJWT } from '../models/user-model/User.model.js'
+import { createUser, getUserByEmail, verifyEmail,removeRefreshJWT, getUserById } from '../models/user-model/User.model.js'
 import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation} from '../middlewares/formValidation.middleware.js'
 import { comparePassword, hashPassword } from '../helpers/bcrypt.helper.js'
 import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/rest-pin/Pin.model.js'
 import { sendEmailVerificationConfirmation, sendEmailVerificationLink } from '../helpers/email.helper.js'
 import { getJWTs } from "../helpers/jwt.helper.js"
 import {removeSession} from "../models/session/Session.model.js"
+import { UserAuth } from '../middlewares/authValidation.middleware.js';
 
 Router.all("/", (req, res, next) => {
 	next();
 });
+
+Router.get("/",UserAuth, async (req, res) => {
+	
+	console.log(req.body)
+	// console.log(user)
+	res.json("niraj")
+	
+})
 
 Router.post("/", createUserValidation, async (req, res) => {
 	try {

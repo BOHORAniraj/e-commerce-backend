@@ -43,3 +43,7 @@ export const removeRefreshJWT = refreshJWT => {
 		}
 	);
 };
+
+export const getUserById = id => {
+	return UserSchema.findById(id);
+}

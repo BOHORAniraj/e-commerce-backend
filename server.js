@@ -23,13 +23,15 @@ app.use(express.json());
 //load Routers
 import userRouter from './routers/userRouter.js'
 import tokenRouter from './routers/tokenRouter.js'
+import { UserAuth } from './middlewares/authValidation.middleware.js';
 
 //use Routers
 app.use("/api/v1/user", userRouter)
-app.use("/api/v1/token",tokenRouter)
+app.use("/api/v1/token", tokenRouter)
+app.use("/api/v1/profile",UserAuth,userRouter)
 
 app.use("/",(req, res) => {
-    res.json({ message: "hello world" });
+    res.json({ message: "hello world 11" });
 
 
 })

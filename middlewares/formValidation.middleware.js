@@ -1,4 +1,6 @@
+
 import Joi from "joi";
+
 const plainshortStr = Joi.string().max(20).required();
 const shortStr = Joi.string().max(20).alphanum().required();
 const email = Joi.string().max(50).email({ minDomainSegments: 2 }).required();
@@ -66,3 +68,4 @@ export const loginUserFormValidation = (req, res, next) => {
 		
 	}
 }
+
