@@ -1,7 +1,7 @@
 import express from 'express'
 const Router = express.Router();
 
-import { createUser, getUserByEmail, verifyEmail,removeRefreshJWT, getUserById } from '../models/user-model/User.model.js'
+import { createUser, getUserByEmail, verifyEmail,removeRefreshJWT, updateUserP } from '../models/user-model/User.model.js'
 import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation} from '../middlewares/formValidation.middleware.js'
 import { comparePassword, hashPassword } from '../helpers/bcrypt.helper.js'
 import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/rest-pin/Pin.model.js'
@@ -24,7 +24,7 @@ Router.get("/",UserAuth, async (req, res) => {
 	})
 	
 })
-
+// create new user
 Router.post("/", createUserValidation, async (req, res) => {
 	try {
 		const hashPass = hashPassword(req.body.password);
@@ -69,6 +69,39 @@ Router.post("/", createUserValidation, async (req, res) => {
 		});
 	}
 });
+// updating user
+Router.patch("/", UserAuth, async(req, res) => {
+	try {
+		const { _id } = req.user;
+		 
+		
+		if (_id) {
+			const result = await updateUserP(_id, req.body);
+			
+
+			if (result?._id) {
+				return res.json({
+					status: "success",
+					message:"Profile has been successfully updated",
+				})
+			}
+		}
+		return res.json({
+			status: "error",
+			message:"unbale to update the user, please try again later",
+		})
+	} catch (error) {
+		console.log(error);
+		return res.json({
+			status: "error",
+			message:"Error , unable to update profile please try again later",
+		})
+		
+	}
+})
+
+
+
 
 //email verification
 Router.patch(

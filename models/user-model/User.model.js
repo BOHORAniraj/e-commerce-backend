@@ -8,6 +8,22 @@ export const createUser = newUser => {
         
     }
 };
+
+export const updateUserP = (_id, updatingInfo) => {
+	console.log("updatingInfo",updatingInfo)
+	try {
+		const result = UserSchema.findByIdAndUpdate(_id, updatingInfo, {
+			new: true,
+		})
+		console.log(result, "from model")
+		return result;
+	} catch (error) {
+		throw new Error(error);
+		
+	}
+}
+
+
 export const verifyEmail = email => {
 	try {
 		const result = UserSchema.findOneAndUpdate(

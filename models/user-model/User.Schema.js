@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-const UserSchema = mongoose.Schema(
+const UserSchema = new mongoose.Schema(
 	{
 		status: {
 			type: String,
