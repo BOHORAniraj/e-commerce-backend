@@ -24,8 +24,7 @@ export const UserAuth = async (req, res, next) => {
 // console.log(sessiondb._id)
                 if (user?.role === "user") {
                     req.user = user;
-                    req.user.password = undefined;
-                    req.user.refreshJWT = undefined; 
+                     
                     next();
                     return;
 

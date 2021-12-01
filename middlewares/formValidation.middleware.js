@@ -4,7 +4,7 @@ import Joi from "joi";
 const plainshortStr = Joi.string().max(20).required();
 const shortStr = Joi.string().max(20).alphanum().required();
 const email = Joi.string().max(50).email({ minDomainSegments: 2 }).required();
-
+const password=Joi.string().min(8).required();
 export const createUserValidation = (req, res, next) => {
 	console.log(req.body);
 	
@@ -49,6 +49,31 @@ export const loginUserFormValidation = (req, res, next) => {
 		const schema = Joi.object({
 			email: email,
 			password:plainshortStr,
+		})
+
+		const {error} = schema.validate(req.body);
+
+		if (error) {
+		return	res.json({
+				status: "error",
+				message:error.message,
+			})
+		}
+		next();
+	} catch (error) {
+		res.json({
+			status: "error",
+			message:"Error, Unable to process yor request please try again later",
+		})
+		
+	}
+}
+export const passUpdateFormValidation = (req, res, next) => {
+	try {
+		const schema = Joi.object({
+			currentPassword: password,
+			password,
+			
 		})
 
 		const {error} = schema.validate(req.body);

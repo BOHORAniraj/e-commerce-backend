@@ -55,3 +55,17 @@ authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFhcUBnbWFpbC5jb
 ###get user data
 GET http://localhost:8000/api/v1/profile
 authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFhcUBnbWFpbC5jb20iLCJpYXQiOjE2MzY5NDUxNDQsImV4cCI6MTYzNjk0NjA0NH0.fWz8H46M-qyH8rSo94rmEMEZxKireSOLwoeXkWILcOo
+
+
+### user update password
+
+POST   http://localhost:8000/api/v1/user/password-update
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFhcUBnbWFpbC5jb20iLCJpYXQiOjE2MzgzMjA0ODMsImV4cCI6MTYzODMyMTM4M30.Zesbjop_ovp_HEzxmahuu41YAwzvks6jW6HROgT_fzM
+
+
+{
+  "currentPassword": "12345678", 
+  "password": "Niraj123#"
+  
+}

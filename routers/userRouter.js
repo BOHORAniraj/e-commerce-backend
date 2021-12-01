@@ -2,10 +2,10 @@ import express from 'express'
 const Router = express.Router();
 
 import { createUser, getUserByEmail, verifyEmail,removeRefreshJWT, updateUserP } from '../models/user-model/User.model.js'
-import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation} from '../middlewares/formValidation.middleware.js'
+import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation,passUpdateFormValidation} from '../middlewares/formValidation.middleware.js'
 import { comparePassword, hashPassword } from '../helpers/bcrypt.helper.js'
 import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/rest-pin/Pin.model.js'
-import { sendEmailVerificationConfirmation, sendEmailVerificationLink } from '../helpers/email.helper.js'
+import { sendEmailVerificationConfirmation, sendEmailVerificationLink, sendPasswordUpdateNotification } from '../helpers/email.helper.js'
 import { getJWTs } from "../helpers/jwt.helper.js"
 import {removeSession} from "../models/session/Session.model.js"
 import { UserAuth } from '../middlewares/authValidation.middleware.js';
@@ -202,6 +202,47 @@ Router.post("/logout", async (req, res) => {
 		});
 	}
 });
+
+Router.post("/password-update", UserAuth,passUpdateFormValidation, async(req, res) => {
+	try {
+		const { _id, password, fname, email } = req.user;
+		const { currentPassword } = req.body;
+
+		//matching current password in db
+
+		const passMatch = comparePassword(currentPassword, password);
+		// console.log(passMatch, "passed matched")
+		if (passMatch) {
+			const hashedPass = hashPassword(req.body.password);
+			if (hashedPass) {
+				const user = await updateUserP(_id, { password: hashedPass })
+				if (user._id) {
+					// console.log("before changing", password);
+					// console.log("after changing", user.password);
+					res.json({
+						status: "success",
+						message:"password has been updated",
+					})
+					sendPasswordUpdateNotification({ fname, email })
+					return;
+				}
+			}
+		}
+		res.json({
+			status: "error",
+			message:"Unable to update your password at the moment,please try again later"
+		})
+
+	} catch (error) {
+		console.log(error)
+		res.json({
+			status: "error",
+			message:"Error, unable to process your request to change password"
+		})
+		
+	}
+	
+})
 
 
 
