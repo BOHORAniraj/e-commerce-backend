@@ -99,3 +99,27 @@ export const sendPasswordUpdateNotification = emailObj => {
 	};
 	emailProcessor(obj);
 };
+
+export const sendPasswordResetOTP = emailObj => {
+	const { fname, otp } = emailObj;
+
+	const obj = {
+		...emailObj,
+		subject: "Rest password OTP",
+		text: `Hi ${fname}, You the following OTP to reset your password. ${otp}. The otp will expire in 15 min`,
+		html: `
+    Hello ${fname},
+    <br/> 
+		You the following OTP to reset your password. 
+		<br/><br/> 
+		${otp}
+		<br/><br/> 
+		 The otp will expire in 15 min 
+    <br/><br/>
+    Thank you<br/><br/>  
+    Kind Regards,<br/> 
+    --some company information --- 
+    `,
+	};
+	emailProcessor(obj);
+};

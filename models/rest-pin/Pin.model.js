@@ -39,3 +39,22 @@ export const deleteInfo = async filterObj => {
 		throw new Error(error);
 	}
 };
+
+export const createOTP = async ({ email, type }) => {
+	try {
+		const pin = randomNumberGenerator(pinLength);
+
+		if (!pin || !email) {
+			return false;
+		}
+
+		const newOTP = {
+			pin,email,type,
+		}
+		const result = await PinSchema(newOTP).save();
+		return result;
+
+	} catch (error) {
+		throw new Error(error);
+	}
+}

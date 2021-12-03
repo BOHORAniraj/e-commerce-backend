@@ -69,3 +69,11 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFhcUBnbWFpbC5j
   "password": "Niraj123#"
   
 }
+
+### requesting otp 
+POST   http://localhost:8000/api/v1/token/request-otp
+Content-Type: application/json
+
+{
+  "email": "qaq@gmail.com" 
+}
