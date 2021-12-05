@@ -77,3 +77,13 @@ Content-Type: application/json
 {
   "email": "qaq@gmail.com" 
 }
+
+### reset new password
+POST   http://localhost:8000/api/v1/user/reset-password
+Content-Type: application/json
+  
+{
+  "otp": "619154" ,
+  "email": "qaq@gmail.com",
+  "password": "Niraj123#"
+}

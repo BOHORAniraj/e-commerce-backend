@@ -1,8 +1,8 @@
 import express from 'express'
 const Router = express.Router();
 
-import { createUser, getUserByEmail, verifyEmail,removeRefreshJWT, updateUserP } from '../models/user-model/User.model.js'
-import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation,passUpdateFormValidation} from '../middlewares/formValidation.middleware.js'
+import { createUser, getUserByEmail, verifyEmail,removeRefreshJWT, updateUserP, updateUserProfileByEmail } from '../models/user-model/User.model.js'
+import { createUserValidation , loginUserFormValidation, UserEmailVerificationValidation,passUpdateFormValidation,forgetPasswordResetFormValidation} from '../middlewares/formValidation.middleware.js'
 import { comparePassword, hashPassword } from '../helpers/bcrypt.helper.js'
 import { createUniqueEmailConfirmation,findUserEmailVerification ,deleteInfo } from '../models/rest-pin/Pin.model.js'
 import { sendEmailVerificationConfirmation, sendEmailVerificationLink, sendPasswordUpdateNotification } from '../helpers/email.helper.js'
@@ -244,6 +244,59 @@ Router.post("/password-update", UserAuth,passUpdateFormValidation, async(req, re
 	
 })
 
+
+//forgot Password resetting using OTP
+Router.post(
+	"/reset-password",
+	forgetPasswordResetFormValidation,
+	async (req, res) => {
+		try {
+			const { otp, password, email } = req.body;
+
+			/// valid opt and email exist in db
+			const filter = { pine: otp, email };
+			const hasOtp = await findUserEmailVerification(filter);
+
+			if (hasOtp?._id) {
+				//encrypt the new password
+				const hashedPass = hashPassword(password);
+				if (hashedPass) {
+					//update user table with the new password
+					const user = await updateUserProfileByEmail(email, {
+						password: hashedPass,
+					});
+
+					if (user?._id) {
+						res.json({
+							status: "success",
+							message: "Password has been updated, you  may sign in now.",
+						});
+
+						// send notification email say password is update
+						sendPasswordUpdateNotification({ email });
+
+						deleteInfo(filter);
+
+						return ;
+						
+					}
+				}
+			}
+
+			res.json({
+				status: "error",
+				message:
+					"Unable to update your password  at the moment, Please try agin later",
+			});
+		} catch (error) {
+			console.log(error);
+			res.json({
+				status: "error",
+				message: "Error, unable to process your request.",
+			});
+		}
+	}
+);
 
 
 

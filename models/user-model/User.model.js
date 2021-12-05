@@ -22,7 +22,16 @@ export const updateUserP = (_id, updatingInfo) => {
 		
 	}
 }
-
+export const updateUserProfileByEmail = (email, updatingInfo) => {
+	try {
+		const result = UserSchema.findOneAndUpdate({ email }, updatingInfo, {
+			new: true,
+		});
+		return result;
+	} catch (error) {
+		throw new Error(error);
+	}
+};
 
 export const verifyEmail = email => {
 	try {
